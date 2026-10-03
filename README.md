@@ -261,5 +261,5 @@ Distribuído sob a licença MIT. Veja o arquivo `LICENSE` para mais informaçõe
 ---
 
 <p align="center">
-  <strong>Fabiano Bastos· Brasil 2015–2024<br>
+  <strong>Fabiano dos Santos Gomes Bastos Bastos· Brasil 2015–2024<br>
 </p>
