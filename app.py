@@ -793,24 +793,68 @@ with aba_plotly:
     metrica_nome = st.selectbox("Indicador exibido no mapa", list(metricas.keys()), key="metrica_mapa")
     coluna, agregacao, formato = metricas[metrica_nome]
 
+
     por_uf = (
         df_filtrado.groupby(["uf", "regiao"])[coluna].agg(agregacao).reset_index()
         .rename(columns={coluna: "valor"})
     )
     por_uf["valor_fmt"] = por_uf["valor"].apply(lambda v: formato.format(v).replace(",", "X").replace(".", ",").replace("X", "."))
 
+    # Resumo completo de cada UF (aparece ao passar o mouse, seja qual for o indicador escolhido)
+    resumo = df_filtrado.groupby("uf").agg(
+        qtd=("preco_imovel", "count"), preco=("preco_imovel", "mean"), m2=("preco_m2", "mean"),
+        renda=("renda_media", "mean"), juros=("taxa_juros", "mean"),
+    ).reset_index()
+    por_uf = por_uf.merge(resumo, on="uf")
+    n = lambda v: f"{v:,.0f}".replace(",", ".")
+    por_uf["detalhe"] = (
+        "Região: " + por_uf["regiao"]
+        + "<br>Imóveis: " + por_uf["qtd"].map(n)
+        + "<br>Preço médio: R$ " + por_uf["preco"].map(n)
+        + "<br>Preço do m²: R$ " + por_uf["m2"].map(n)
+        + "<br>Renda média: R$ " + por_uf["renda"].map(n)
+        + "<br>Juros médios: " + por_uf["juros"].map(lambda v: f"{v:.2f}".replace(".", ",")) + "%"
+    )
+
+    # Centro de cada estado (latitude, longitude), usado para escrever a sigla no mapa
+    CENTROS = {
+        "AC": (-9.3, -70.4), "AL": (-9.5, -36.6), "AM": (-4.2, -64.7), "AP": (1.4, -52.0),
+        "BA": (-12.5, -41.7), "CE": (-5.1, -39.6), "DF": (-15.8, -47.8), "ES": (-19.6, -40.7),
+        "GO": (-16.0, -49.6), "MA": (-5.1, -45.3), "MG": (-18.5, -44.7), "MS": (-20.3, -54.8),
+        "MT": (-12.9, -55.9), "PA": (-4.0, -53.1), "PB": (-7.1, -36.8), "PE": (-8.3, -38.0),
+        "PI": (-7.4, -43.0), "PR": (-24.6, -51.6), "RJ": (-22.2, -42.7), "RN": (-5.8, -36.7),
+        "RO": (-10.9, -62.8), "RR": (2.1, -61.4), "RS": (-29.7, -53.3), "SC": (-27.2, -50.5),
+        "SE": (-10.6, -37.4), "SP": (-22.3, -48.7), "TO": (-10.1, -48.3),
+    }
+
     fig_mapa = px.choropleth(
         por_uf, geojson=geojson_br, locations="uf", featureidkey="properties.sigla",
-        color="valor", color_continuous_scale=ESCALA_TEAL,
-        hover_name="uf", hover_data={"uf": False, "regiao": True, "valor": False, "valor_fmt": True},
-        labels={"valor_fmt": metrica_nome, "regiao": "Região", "valor": metrica_nome},
+        color="valor", labels={"valor": metrica_nome},
+        color_continuous_scale=["#d4f1e8", "#9fe0cc", "#5cc7ab", "#2a9d8f"],  # só tons de verde
+    )
+    fig_mapa.update_traces(
+        customdata=por_uf[["detalhe"]].values,
+        hovertemplate="<b>%{location}</b><br>%{customdata[0]}<extra></extra>",
+        marker_line_color="#0f1b17", marker_line_width=0.8,
     )
     fig_mapa.update_geos(fitbounds="locations", visible=False, bgcolor="rgba(0,0,0,0)")
-    fig_mapa.update_traces(marker_line_color="#0f1b17", marker_line_width=0.8)
+    ufs_mapa = [u for u in por_uf["uf"] if u in CENTROS]
+    fig_mapa.add_trace(go.Scattergeo(  # sigla escrita dentro de cada estado
+        lat=[CENTROS[u][0] for u in ufs_mapa], lon=[CENTROS[u][1] for u in ufs_mapa],
+        text=ufs_mapa, mode="text", hoverinfo="skip", showlegend=False,
+        textfont=dict(size=12, color="#0b1f1a", family="Inter, sans-serif"),
+    ))
     fig_mapa.update_layout(coloraxis_colorbar=dict(title="", thickness=14, len=0.7))
     estilo_plotly(fig_mapa, altura=560)
     fig_mapa.update_layout(title=f"{metrica_nome} por UF")
     st.plotly_chart(fig_mapa, width="stretch")
+
+
+    
+
+
+
+
 
     if len(por_uf) > 0:
         uf_alta = por_uf.loc[por_uf["valor"].idxmax()]
