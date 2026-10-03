@@ -1030,7 +1030,7 @@ st.markdown(f"""
 
 st.markdown(
     "<p style='text-align:center;color:#34483f;font-size:0.75rem;margin-top:1rem'>"
-    "ImobiAnalytics · Dados simulados · Brasil 2015–2024 · Pandas · Seaborn · Matplotlib · Plotly · SQLAlchemy · NumPy"
+    "Fabiano dos Santos Gomes Bastos ImobiAnalytics · Dados simulados ·  Brasil 2015–2024 · Pandas · Seaborn · Matplotlib · Plotly · SQLAlchemy · NumPy"
     "</p>",
     unsafe_allow_html=True,
 )
