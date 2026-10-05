@@ -246,7 +246,11 @@ engine = criar_banco_sqlite(df)
 # ─────────────────────────────────────────────
 st.markdown("""
 <div class="hero-section">
-  <span class="hero-badge">🏙️ Analytics Platform · Brasil 2015–2024</span>
+  <span class="hero-badge">🏙️ Analytics Platform · Brasil 2015–2024 
+  DISCIPLINA: LINGUAGENS DE PROGRAMAÇÃO
+  ALUNO: Fabiano dos Santos Gomes Bastos
+  PROFESSOR: Alexandre Neves Louzada</span>
+  
   <h1 class="hero-title">Mercado Imobiliário Brasileiro</h1>
   <p class="hero-subtitle">
     Análise profunda do comportamento imobiliário no Brasil entre 2015 e 2024 —
