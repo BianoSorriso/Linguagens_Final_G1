@@ -1,3 +1,9 @@
+DISCIPLINA: LINGUAGENS DE PROGRAMAÇÃO
+ALUNO: FABIANO DOS SANTOS GOMES BASTOS
+PROFESSOR: ALEXANDRE NEVES LOUZADA
+
+
+
 # 🏙️ ImobiAnalytics — Dashboard do Mercado Imobiliário Brasileiro
 
 > Plataforma de análise interativa do mercado imobiliário brasileiro (2015–2024), construída com Streamlit, Pandas, Matplotlib, Seaborn, SQLAlchemy e NumPy.
