@@ -1,7 +1,7 @@
 DISCIPLINA: LINGUAGENS DE PROGRAMAÇÃO
-ALUNO: FABIANO DOS SANTOS GOMES BASTOS
-PROFESSOR: ALEXANDRE NEVES LOUZADA
+ALUNO: Fabiano dos Santos Gomes Bastos
 
+PROFESSOR: Alexandre Neves Louzada
 
 
 # 🏙️ ImobiAnalytics — Dashboard do Mercado Imobiliário Brasileiro
